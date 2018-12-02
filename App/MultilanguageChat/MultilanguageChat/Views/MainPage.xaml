@@ -1,17 +1,23 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
-<ContentPage
+<common:ContentPageBase
     x:Class="MultilanguageChat.Views.MainPage"
     xmlns="http://xamarin.com/schemas/2014/forms"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:common="clr-namespace:MultilanguageChat.Common"
     xmlns:local="clr-namespace:MultilanguageChat"
-    Title="Multilanguage Chat">
+    Title="Multilanguage Chat"
+    BindingContext="{Binding Source={StaticResource Locator}, Path=MainViewModel}">
 
-    <StackLayout>
-        <!--  Place new controls here  -->
-        <Label
-            HorizontalOptions="Center"
-            Text="Welcome to Xamarin.Forms!"
-            VerticalOptions="CenterAndExpand" />
-    </StackLayout>
+    <Grid Style="{StaticResource MasterGridStyle}">
+        <Grid Style="{StaticResource ContentGridStyle}">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
 
-</ContentPage>
+            <Entry Placeholder="User Name..." Text="{Binding UserName}" />
+        </Grid>
+    </Grid>
+
+</common:ContentPageBase>
