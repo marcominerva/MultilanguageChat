@@ -26,7 +26,7 @@ namespace MultilanguageChat.Controllers
         {
             string translatedText = null;
 
-            if (!string.IsNullOrWhiteSpace(destinationLanguage))
+            if (!string.IsNullOrWhiteSpace(destinationLanguage) && sourceLanguage != destinationLanguage)
             {
                 // Translates the text.
                 var translatorService = new TranslatorClient(settings.TranslatorSubscriptionKey);
@@ -35,7 +35,7 @@ namespace MultilanguageChat.Controllers
             }
             else
             {
-                // No destination language specified, use the original message.
+                // No destination language specified, use the original text.
                 translatedText = text;
             }
 
