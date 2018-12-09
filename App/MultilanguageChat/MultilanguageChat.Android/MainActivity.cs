@@ -6,6 +6,7 @@ using Android.Views;
 using Android.Widget;
 using Android.OS;
 using Acr.UserDialogs;
+using Xamarin.Forms.PlatformConfiguration.AndroidSpecific;
 
 namespace MultilanguageChat.Droid
 {
@@ -26,6 +27,8 @@ namespace MultilanguageChat.Droid
             UserDialogs.Init(this);
 
             LoadApplication(new App());
+
+            Xamarin.Forms.Application.Current.On<Xamarin.Forms.PlatformConfiguration.Android>().UseWindowSoftInputModeAdjust(WindowSoftInputModeAdjust.Resize);
         }
 
         protected override void OnPause()

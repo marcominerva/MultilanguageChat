@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
-<?Mapping compile="true"               ?>
+<?Mapping compile="true"              ?>
 <ResourceDictionary
     xmlns="http://xamarin.com/schemas/2014/forms"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
@@ -44,71 +44,8 @@
         </Setter>
     </Style>
 
-    <Style x:Key="MenuStyle" TargetType="Grid">
-        <Setter Property="BackgroundColor" Value="{StaticResource MenuBackgroundColor}" />
-    </Style>
-
-    <Style x:Key="MenuTitleStyle" TargetType="Label">
-        <Setter Property="VerticalOptions" Value="Center" />
-        <Setter Property="FontSize" Value="18" />
-        <Setter Property="FontAttributes" Value="Bold" />
-        <Setter Property="TextColor" Value="{StaticResource TextColorWithDarkBackground}" />
-    </Style>
-
-    <Style x:Key="MenuUserLabelStyle" TargetType="Label">
-        <Setter Property="VerticalOptions" Value="Center" />
-        <Setter Property="FontSize" Value="10" />
-        <Setter Property="HeightRequest" Value="13" />
-        <Setter Property="TextColor" Value="{StaticResource TextColorWithDarkBackground}" />
-    </Style>
-
-    <Style x:Key="MenuItemLabelStyle" TargetType="Label">
-        <Setter Property="VerticalOptions" Value="Center" />
-        <Setter Property="VerticalTextAlignment" Value="Center" />
-        <Setter Property="FontSize" Value="18" />
-        <Setter Property="TextColor" Value="{StaticResource TextColorWithLightBackground}" />
-    </Style>
-
-    <Style x:Key="FontAwesomeStyle" TargetType="Label">
+    <Style x:Key="FontAwesomeLabelStyle" TargetType="Label">
         <Setter Property="FontFamily" Value="FontAwesome" />
-    </Style>
-
-    <Style
-        x:Key="MenuItemIconStyle"
-        BasedOn="{StaticResource FontAwesomeStyle}"
-        TargetType="Label">
-        <Setter Property="Margin" Value="0,0,10,0" />
-        <Setter Property="VerticalOptions" Value="Center" />
-        <Setter Property="FontSize" Value="18" />
-        <Setter Property="VerticalTextAlignment" Value="Center" />
-        <Setter Property="HorizontalTextAlignment" Value="Center" />
-        <Setter Property="TextColor" Value="#6d747a" />
-        <Setter Property="WidthRequest" Value="25" />
-    </Style>
-
-    <Style ApplyToDerivedTypes="True" TargetType="Label">
-        <Setter Property="TextColor" Value="{StaticResource TextColorWithLightBackground}" />
-        <Setter Property="FontSize" Value="16" />
-    </Style>
-
-    <Style x:Key="LabelValueStyle" TargetType="Label">
-        <Setter Property="FontAttributes" Value="Bold" />
-    </Style>
-
-    <Style x:Key="TitleLabelStyle" TargetType="Label">
-        <Setter Property="HorizontalOptions" Value="Center" />
-        <Setter Property="HorizontalTextAlignment" Value="Center" />
-        <Setter Property="FontSize" Value="Large" />
-        <Setter Property="FontAttributes" Value="Bold" />
-        <Setter Property="Margin" Value="0,0,0,5" />
-        <Setter Property="TextColor" Value="{StaticResource TextColorWithLightBackground}" />
-    </Style>
-
-    <Style x:Key="SubtitleLabelStyle" TargetType="Label">
-        <Setter Property="HorizontalOptions" Value="Center" />
-        <Setter Property="Margin" Value="0,0,0,10" />
-        <Setter Property="TextColor" Value="{StaticResource TextColorWithLightBackground}" />
-        <Setter Property="HorizontalTextAlignment" Value="Center" />
     </Style>
 
     <Style TargetType="Button">
@@ -124,19 +61,10 @@
         </Setter>
     </Style>
 
-    <Style x:Key="SwitchLabelStyle" TargetType="Label">
-        <Setter Property="VerticalOptions" Value="Center" />
-    </Style>
-
-    <Style TargetType="Switch">
+    <Style x:Key="FontAwesomeButtonStyle" TargetType="Button">
+        <Setter Property="FontFamily" Value="FontAwesome" />
+        <Setter Property="FontSize" Value="18" />
         <Setter Property="WidthRequest" Value="50" />
-        <Setter Property="OnColor">
-            <Setter.Value>
-                <OnPlatform x:TypeArguments="Color">
-                    <On Platform="iOS" Value="{StaticResource DefaultColor}" />
-                </OnPlatform>
-            </Setter.Value>
-        </Setter>
     </Style>
 
     <Style TargetType="ListView">
@@ -147,30 +75,19 @@
         <Setter Property="ios:ListView.SeparatorStyle" Value="FullWidth" />
     </Style>
 
-    <Style x:Key="MenuListViewStyle" TargetType="ListView">
-        <Setter Property="SeparatorVisibility" Value="None" />
-        <Setter Property="BackgroundColor" Value="{StaticResource MenuBackgroundColor}" />
+    <Style TargetType="Label">
+        <Setter Property="TextColor" Value="{StaticResource TextColorWithLightBackground}" />
     </Style>
 
-    <Style x:Key="GridLineBoxViewStyle" TargetType="BoxView">
-        <Setter Property="BackgroundColor" Value="LightGray" />
-        <Setter Property="HeightRequest" Value="1" />
-        <Setter Property="VerticalOptions" Value="End" />
-        <Setter Property="HorizontalOptions" Value="FillAndExpand" />
+    <Style x:Key="MessageLabelStyle" TargetType="Label">
+        <Setter Property="FontSize" Value="18" />
     </Style>
 
     <Style
-        x:Key="MediumGridLineBoxViewStyle"
-        BasedOn="{StaticResource GridLineBoxViewStyle}"
-        TargetType="BoxView">
-        <Setter Property="HeightRequest" Value="2" />
-    </Style>
-
-    <Style
-        x:Key="LargeGridLineBoxViewStyle"
-        BasedOn="{StaticResource GridLineBoxViewStyle}"
-        TargetType="BoxView">
-        <Setter Property="HeightRequest" Value="3" />
+        x:Key="NameLabelStyle"
+        BasedOn="{StaticResource MessageLabelStyle}"
+        TargetType="Label">
+        <Setter Property="FontAttributes" Value="Bold" />
     </Style>
 
     <Style TargetType="ActivityIndicator">
@@ -193,53 +110,5 @@
         </Setter>
     </Style>
 
-    <Style TargetType="DatePicker">
-        <Setter Property="Format" Value="dd/MM/yyyy" />
-        <Style.Triggers>
-            <Trigger TargetType="DatePicker" Property="IsEnabled" Value="True">
-                <Setter Property="BackgroundColor">
-                    <OnPlatform x:TypeArguments="Color">
-                        <On Platform="UWP, Android" Value="Transparent" />
-                        <On Platform="iOS" Value="White" />
-                    </OnPlatform>
-                </Setter>
-            </Trigger>
-            <Trigger TargetType="DatePicker" Property="IsEnabled" Value="False">
-                <Setter Property="BackgroundColor">
-                    <OnPlatform x:TypeArguments="Color">
-                        <On Platform="UWP, Android" Value="Transparent" />
-                        <On Platform="iOS" Value="LightGray" />
-                    </OnPlatform>
-                </Setter>
-            </Trigger>
-        </Style.Triggers>
-    </Style>
-
-    <Style TargetType="Entry">
-        <Setter Property="BackgroundColor">
-            <OnPlatform x:TypeArguments="Color">
-                <On Platform="UWP, Android" Value="Transparent" />
-                <On Platform="iOS" Value="White" />
-            </OnPlatform>
-        </Setter>
-        <Style.Triggers>
-            <Trigger TargetType="Entry" Property="IsEnabled" Value="True">
-                <Setter Property="BackgroundColor">
-                    <OnPlatform x:TypeArguments="Color">
-                        <On Platform="UWP, Android" Value="Transparent" />
-                        <On Platform="iOS" Value="White" />
-                    </OnPlatform>
-                </Setter>
-            </Trigger>
-            <Trigger TargetType="Entry" Property="IsEnabled" Value="False">
-                <Setter Property="BackgroundColor">
-                    <OnPlatform x:TypeArguments="Color">
-                        <On Platform="UWP, Android" Value="Transparent" />
-                        <On Platform="iOS" Value="LightGray" />
-                    </OnPlatform>
-                </Setter>
-            </Trigger>
-        </Style.Triggers>
-    </Style>
 </ResourceDictionary>
 

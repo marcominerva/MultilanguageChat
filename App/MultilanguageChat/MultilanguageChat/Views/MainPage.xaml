@@ -4,20 +4,92 @@
     xmlns="http://xamarin.com/schemas/2014/forms"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:common="clr-namespace:MultilanguageChat.Common"
+    xmlns:controls="clr-namespace:MultilanguageChat.Controls"
+    xmlns:fa="clr-namespace:Awesome"
     xmlns:local="clr-namespace:MultilanguageChat"
     Title="Multilanguage Chat"
     BindingContext="{Binding Source={StaticResource Locator}, Path=MainViewModel}">
+
+    <common:ContentPageBase.Resources>
+        <ResourceDictionary>
+            <DataTemplate x:Key="myMessageTemplate">
+                <ViewCell>
+                    <Label
+                        Margin="0,0,0,5"
+                        HorizontalOptions="End"
+                        Style="{StaticResource MessageLabelStyle}">
+                        <Label.FormattedText>
+                            <FormattedString>
+                                <Span Style="{StaticResource NameLabelStyle}" Text="{Binding Sender}" />
+                                <Span Text=": " />
+                                <Span Text="{Binding Text}" />
+                            </FormattedString>
+                        </Label.FormattedText>
+                    </Label>
+                </ViewCell>
+            </DataTemplate>
+            <DataTemplate x:Key="otherMessageTemplate">
+                <ViewCell>
+                    <Label Margin="0,0,0,5" Style="{StaticResource MessageLabelStyle}">
+                        <Label.FormattedText>
+                            <FormattedString>
+                                <Span Style="{StaticResource NameLabelStyle}" Text="{Binding Sender}" />
+                                <Span Text=": " />
+                                <Span Text="{Binding Text}" />
+                            </FormattedString>
+                        </Label.FormattedText>
+                    </Label>
+                </ViewCell>
+            </DataTemplate>
+            <controls:ChatMessageDataTemplateSelector
+                x:Key="chatMessageDataTemplateSelector"
+                MyMessage="{StaticResource myMessageTemplate}"
+                OtherMessage="{StaticResource otherMessageTemplate}" />
+        </ResourceDictionary>
+    </common:ContentPageBase.Resources>
 
     <Grid Style="{StaticResource MasterGridStyle}">
         <Grid Style="{StaticResource ContentGridStyle}">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
                 <RowDefinition Height="*" />
                 <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
 
-            <Entry Placeholder="User Name..." Text="{Binding UserName}" />
+            <Entry
+                Grid.Row="0"
+                Placeholder="User Name..."
+                Text="{Binding UserName}" />
+            <Picker
+                Title="Select your language"
+                Grid.Row="1"
+                ItemDisplayBinding="{Binding Name}"
+                ItemsSource="{Binding Languages}"
+                SelectedItem="{Binding SelectedLanguage, Mode=TwoWay}" />
+
+            <ListView
+                Grid.Row="2"
+                Margin="0,5,0,0"
+                ItemTemplate="{StaticResource chatMessageDataTemplateSelector}"
+                ItemsSource="{Binding Messages}" />
+
+            <StackLayout Grid.Row="3" Orientation="Horizontal">
+                <Entry
+                    HorizontalOptions="FillAndExpand"
+                    Placeholder="Your message..."
+                    ReturnCommand="{Binding SendMessageCommand}"
+                    ReturnType="Send"
+                    Text="{Binding Message, Mode=TwoWay}" />
+                <Button
+                    Command="{Binding SendMessageCommand}"
+                    Style="{StaticResource FontAwesomeButtonStyle}"
+                    Text="{x:Static fa:FontAwesome.ShareSquareO}" />
+                <Button Style="{StaticResource FontAwesomeButtonStyle}" Text="{x:Static fa:FontAwesome.Microphone}" />
+            </StackLayout>
         </Grid>
+
+        <ActivityIndicator IsRunning="{Binding IsBusy}" IsVisible="{Binding IsBusy}" />
     </Grid>
 
 </common:ContentPageBase>
