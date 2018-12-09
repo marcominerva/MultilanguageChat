@@ -34,6 +34,8 @@
     <string>MultilanguageChat</string>
     <key>XSAppIconAssets</key>
     <string>Assets.xcassets/AppIcon.appiconset</string>
+    <key>NSMicrophoneUsageDescription</key>
+    <string>This app would like to access your microphone</string>
     <key>UIAppFonts</key>
     <array>
       <string>fontawesome-webfont.ttf</string>

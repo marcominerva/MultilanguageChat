@@ -16,10 +16,17 @@ namespace MultilanguageChat.ViewModels
         static ViewModelLocator()
         {
             SimpleIoc.Default.Register<IUserDialogs>(() => UserDialogs.Instance);
+            SimpleIoc.Default.Register<IAudioService, AudioService>();
 
             SimpleIoc.Default.Register<ITranslatorClient>(() =>
             {
                 var client = new TranslatorClient(Constants.TranslatorSubscriptionKey);
+                return client;
+            });
+
+            SimpleIoc.Default.Register<ISpeechClient>(()=>
+            {
+                var client = new SpeechClient(Constants.SpeechRegion, Constants.SpeechSubscriptionKey);
                 return client;
             });
 

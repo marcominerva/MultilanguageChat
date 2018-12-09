@@ -2,7 +2,9 @@
 <Application
     x:Class="MultilanguageChat.App"
     xmlns="http://xamarin.com/schemas/2014/forms"
-    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:converters="clr-namespace:MultilanguageChat.Converters"
+    xmlns:sys="clr-namespace:System;assembly=netstandard">
 
     <Application.Resources>
         <ResourceDictionary>
@@ -11,6 +13,18 @@
             </ResourceDictionary.MergedDictionaries>
 
             <vm:ViewModelLocator xmlns:vm="clr-namespace:MultilanguageChat.ViewModels" x:Key="Locator" />
+
+            <converters:ValueWhenConverter x:Key="BooleanNegationConverter">
+                <converters:ValueWhenConverter.When>
+                    <sys:Boolean>True</sys:Boolean>
+                </converters:ValueWhenConverter.When>
+                <converters:ValueWhenConverter.Value>
+                    <sys:Boolean>False</sys:Boolean>
+                </converters:ValueWhenConverter.Value>
+                <converters:ValueWhenConverter.Otherwise>
+                    <sys:Boolean>True</sys:Boolean>
+                </converters:ValueWhenConverter.Otherwise>
+            </converters:ValueWhenConverter>
         </ResourceDictionary>
     </Application.Resources>
 </Application>

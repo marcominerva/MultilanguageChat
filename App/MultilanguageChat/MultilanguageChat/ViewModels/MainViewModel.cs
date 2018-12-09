@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -18,7 +19,9 @@ namespace MultilanguageChat.ViewModels
     public class MainViewModel : ViewModelBase
     {
         private readonly ITranslatorClient translatorClient;
+        private readonly ISpeechClient speechClient;
         private readonly IMessageService messageService;
+        private readonly IAudioService audioService;
 
         private string userName;
         public string UserName
@@ -48,13 +51,26 @@ namespace MultilanguageChat.ViewModels
             set => Set(ref message, value, broadcast: true);
         }
 
+        private bool isRecording;
+        public bool IsRecording
+        {
+            get => isRecording;
+            set => Set(ref isRecording, value);
+        }
+
         public ObservableCollection<ChatMessage> Messages { get; } = new ObservableCollection<ChatMessage>();
 
         public AutoRelayCommand SendMessageCommand { get; private set; }
 
-        public MainViewModel(ITranslatorClient translatorClient, IMessageService messageService)
+        public AutoRelayCommand StartRecordingCommand { get; private set; }
+
+        public AutoRelayCommand StopRecordingCommand { get; private set; }
+
+        public MainViewModel(ITranslatorClient translatorClient, ISpeechClient speechClient, IMessageService messageService, IAudioService audioService)
         {
             this.translatorClient = translatorClient;
+            this.speechClient = speechClient;
+            this.audioService = audioService;
 
             this.messageService = messageService;
             this.messageService.OnMessageReceivedAction(OnMessageReceived);
@@ -69,6 +85,9 @@ namespace MultilanguageChat.ViewModels
             SendMessageCommand = new AutoRelayCommand(async () => await SendMessageAsync(),
                 () => !IsBusy && !string.IsNullOrWhiteSpace(message) && !string.IsNullOrWhiteSpace(userName))
                 .DependsOn(nameof(IsBusy)).DependsOn(nameof(Message)).DependsOn(nameof(UserName));
+
+            StartRecordingCommand = new AutoRelayCommand(async () => await StartRecordingAsync());
+            StopRecordingCommand = new AutoRelayCommand(async () => await StopRecordingAsync());
         }
 
         private async Task SendMessageAsync()
@@ -84,6 +103,8 @@ namespace MultilanguageChat.ViewModels
                 };
 
                 Messages.Add(chatMessage);
+
+                // Sends the message using SignalR.
                 await messageService.SendMessageAsync(chatMessage);
 
                 Message = null;
@@ -98,17 +119,74 @@ namespace MultilanguageChat.ViewModels
         {
             try
             {
-                // Translates the message in the user language.
+                // Translates the message to the user language with Translator Cognitive Service.
                 var translationResponse = await translatorClient.TranslateAsync(message.Text, message.Language, selectedLanguage.Code);
                 message.Text = translationResponse.Translation.Text;
 
                 Device.BeginInvokeOnMainThread(() => Messages.Add(message));
+                await audioService.SpeakAsync($"{message.Sender}. {message.Text}", selectedLanguage.Code);
             }
             catch (Exception ex)
             {
                 await ShowErrorAsync("Error while translating message", ex);
             }
         }
+
+        private async Task StartRecordingAsync()
+        {
+            string audioFile = null;
+            IsRecording = true;
+
+            try
+            {
+                audioFile = await audioService.StartRecordingAsync();
+            }
+            catch (Exception ex)
+            {
+                IsRecording = false;
+                await ShowErrorAsync("Error while start recording", ex);
+            }
+            finally
+            {
+                IsRecording = false;
+            }
+
+            if (audioFile != null)
+            {
+                IsBusy = true;
+
+                try
+                {
+                    using (var file = File.OpenRead(audioFile))
+                    {
+                        // Tries to recognize speech using the Speech Cognitive Service.
+                        var cultureInfo = CultureInfo.CreateSpecificCulture(selectedLanguage.Code);
+                        var result = await speechClient.RecognizeAsync(file, cultureInfo.IetfLanguageTag);
+
+                        if (result.RecognitionStatus == RecognitionStatus.Success)
+                        {
+                            // Speech has been recognized, sends it.
+                            Message = result.DisplayText;
+                            await SendMessageAsync();
+                        }
+                        else
+                        {
+                            await DialogService.AlertAsync("Unable to recognize speech");
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    await ShowErrorAsync("Error while recognizing speech", ex);
+                }
+                finally
+                {
+                    IsBusy = false;
+                }
+            }
+        }
+
+        private Task StopRecordingAsync() => audioService.StopRecordingAsync();
 
         public override async void Activate(object parameter)
         {

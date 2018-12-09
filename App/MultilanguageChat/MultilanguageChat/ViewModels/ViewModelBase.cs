@@ -64,13 +64,20 @@ namespace MultilanguageChat.ViewModels
         {
         }
 
-        protected Task ShowErrorAsync(string message, Exception ex = null)
-            => ShowErrorAsync(message, null, ex);
+        protected Task ShowErrorAsync(string message, Exception error = null)
+            => ShowErrorAsync(message, null, error);
 
-        protected async Task ShowErrorAsync(string message, string title, Exception ex = null)
+        protected async Task ShowErrorAsync(string message, string title, Exception error = null)
         {
             DialogService.HideLoading();
-            await DialogService.AlertAsync(message, title);
+
+            var alert = message;
+            if (error != null && error.Message != message)
+            {
+                alert += $" - ({error.Message})";
+            }
+
+            await DialogService.AlertAsync(alert, title);
         }
     }
 }

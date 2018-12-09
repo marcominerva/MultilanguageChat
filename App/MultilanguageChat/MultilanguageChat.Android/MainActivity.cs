@@ -7,6 +7,9 @@ using Android.Widget;
 using Android.OS;
 using Acr.UserDialogs;
 using Xamarin.Forms.PlatformConfiguration.AndroidSpecific;
+using Android.Support.V4.Content;
+using Android.Support.V4.App;
+using Android;
 
 namespace MultilanguageChat.Droid
 {
@@ -29,6 +32,10 @@ namespace MultilanguageChat.Droid
             LoadApplication(new App());
 
             Xamarin.Forms.Application.Current.On<Xamarin.Forms.PlatformConfiguration.Android>().UseWindowSoftInputModeAdjust(WindowSoftInputModeAdjust.Resize);
+            if (ContextCompat.CheckSelfPermission(this, Manifest.Permission.RecordAudio) != Permission.Granted)
+            {
+                ActivityCompat.RequestPermissions(this, new string[] { Manifest.Permission.RecordAudio }, 1);
+            }
         }
 
         protected override void OnPause()

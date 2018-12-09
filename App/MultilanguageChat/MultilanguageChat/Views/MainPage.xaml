@@ -15,7 +15,7 @@
             <DataTemplate x:Key="myMessageTemplate">
                 <ViewCell>
                     <Label
-                        Margin="0,0,0,5"
+                        Margin="20,0,0,5"
                         HorizontalOptions="End"
                         Style="{StaticResource MessageLabelStyle}">
                         <Label.FormattedText>
@@ -30,7 +30,7 @@
             </DataTemplate>
             <DataTemplate x:Key="otherMessageTemplate">
                 <ViewCell>
-                    <Label Margin="0,0,0,5" Style="{StaticResource MessageLabelStyle}">
+                    <Label Margin="0,0,20,5" Style="{StaticResource MessageLabelStyle}">
                         <Label.FormattedText>
                             <FormattedString>
                                 <Span Style="{StaticResource NameLabelStyle}" Text="{Binding Sender}" />
@@ -82,10 +82,15 @@
                     ReturnType="Send"
                     Text="{Binding Message, Mode=TwoWay}" />
                 <Button
-                    Command="{Binding SendMessageCommand}"
+                    Command="{Binding StartRecordingCommand}"
+                    IsVisible="{Binding IsRecording, Converter={StaticResource BooleanNegationConverter}}"
                     Style="{StaticResource FontAwesomeButtonStyle}"
-                    Text="{x:Static fa:FontAwesome.ShareSquareO}" />
-                <Button Style="{StaticResource FontAwesomeButtonStyle}" Text="{x:Static fa:FontAwesome.Microphone}" />
+                    Text="{x:Static fa:FontAwesome.Microphone}" />
+                <Button
+                    Command="{Binding StopRecordingCommand}"
+                    IsVisible="{Binding IsRecording}"
+                    Style="{StaticResource FontAwesomeButtonStyle}"
+                    Text="{x:Static fa:FontAwesome.Stop}" />
             </StackLayout>
         </Grid>
 
