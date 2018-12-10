@@ -10,7 +10,7 @@ namespace MultilanguageChat.Services
 {
     public class MessageService : IMessageService
     {
-        private readonly HubConnection hub;
+        private readonly HubConnection connection;
         private const string SEND_MESSAGE = "SendMessage";
 
         private Action<ChatMessage> messagedReceivedAction;
@@ -23,17 +23,23 @@ namespace MultilanguageChat.Services
         public MessageService(string serverUrl)
         {
             // Creates the hub for the connection via SignalR.
-            hub = new HubConnectionBuilder()
+            connection = new HubConnectionBuilder()
                 .WithUrl(serverUrl)
                 .Build();
 
-            hub.On<ChatMessage>(SEND_MESSAGE, (message) => messagedReceivedAction?.Invoke(message));
+            connection.Closed += async (error) =>
+            {
+                await Task.Delay(new Random().Next(0, 5) * 1000);
+                await connection.StartAsync();
+            };
+
+            connection.On<ChatMessage>(SEND_MESSAGE, (message) => messagedReceivedAction?.Invoke(message));
         }
 
-        public Task ConnectAsync() => hub.StartAsync();
+        public Task ConnectAsync() => connection.StartAsync();
 
-        public Task DisconnectAsync() => hub.StopAsync();
+        public Task DisconnectAsync() => connection.StopAsync();
 
-        public Task SendMessageAsync(ChatMessage message) => hub.InvokeAsync(SEND_MESSAGE, message);
+        public Task SendMessageAsync(ChatMessage message) => connection.InvokeAsync(SEND_MESSAGE, message);
     }
 }
