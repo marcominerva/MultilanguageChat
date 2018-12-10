@@ -14,7 +14,7 @@ namespace MultilanguageChat.Services
         private const string SEND_MESSAGE = "SendMessage";
 
         private Action<ChatMessage> messagedReceivedAction;
-        public IMessageService OnMessageReceivedAction(Action<ChatMessage> action)
+        public IMessageService OnMessageReceived(Action<ChatMessage> action)
         {
             messagedReceivedAction = action;
             return this;

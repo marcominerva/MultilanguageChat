@@ -73,7 +73,7 @@ namespace MultilanguageChat.ViewModels
             this.audioService = audioService;
 
             this.messageService = messageService;
-            this.messageService.OnMessageReceivedAction(OnMessageReceived);
+            this.messageService.OnMessageReceived(OnMessageReceived);
 
             UserName = DeviceInfo.Name;
 

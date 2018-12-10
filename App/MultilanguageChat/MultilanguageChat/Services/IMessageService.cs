@@ -15,6 +15,6 @@ namespace MultilanguageChat.Services
 
         Task SendMessageAsync(ChatMessage message);
 
-        IMessageService OnMessageReceivedAction(Action<ChatMessage> action);
+        IMessageService OnMessageReceived(Action<ChatMessage> action);
     }
 }
