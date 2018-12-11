@@ -83,11 +83,16 @@ namespace MultilanguageChat.ViewModels
         private void CreateCommands()
         {
             SendMessageCommand = new AutoRelayCommand(async () => await SendMessageAsync(),
-                () => !IsBusy && !string.IsNullOrWhiteSpace(message) && !string.IsNullOrWhiteSpace(userName))
-                .DependsOn(nameof(IsBusy)).DependsOn(nameof(Message)).DependsOn(nameof(UserName));
+                () => !IsBusy && !string.IsNullOrWhiteSpace(message) && !string.IsNullOrWhiteSpace(userName) && selectedLanguage != null)
+                .DependsOn(nameof(IsBusy)).DependsOn(nameof(Message)).DependsOn(nameof(UserName)).DependsOn(nameof(SelectedLanguage));
 
-            StartRecordingCommand = new AutoRelayCommand(async () => await StartRecordingAsync());
-            StopRecordingCommand = new AutoRelayCommand(async () => await StopRecordingAsync());
+            StartRecordingCommand = new AutoRelayCommand(async () => await StartRecordingAsync(),
+                () => !IsBusy && !string.IsNullOrWhiteSpace(userName) && selectedLanguage != null)
+                .DependsOn(nameof(IsBusy)).DependsOn(nameof(UserName)).DependsOn(nameof(SelectedLanguage));
+
+            StopRecordingCommand = new AutoRelayCommand(async () => await StopRecordingAsync(),
+                () => !IsBusy)
+                .DependsOn(nameof(IsBusy));
         }
 
         private async Task SendMessageAsync()
@@ -143,8 +148,11 @@ namespace MultilanguageChat.ViewModels
             }
             catch (Exception ex)
             {
-                IsRecording = false;
                 await ShowErrorAsync("Error while start recording", ex);
+            }
+            finally
+            {
+                IsRecording = false;
             }
 
             if (audioFile != null)
@@ -161,7 +169,7 @@ namespace MultilanguageChat.ViewModels
 
                         if (result.RecognitionStatus == RecognitionStatus.Success)
                         {
-                            // Speech has been recognized, sends it.
+                            // Speech has been recognized, sends it to the server.
                             Message = result.DisplayText;
                             await SendMessageAsync();
                         }
@@ -178,12 +186,7 @@ namespace MultilanguageChat.ViewModels
                 finally
                 {
                     IsBusy = false;
-                    IsRecording = false;
                 }
-            }
-            else
-            {
-                IsRecording = false;
             }
         }
 
