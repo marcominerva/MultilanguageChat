@@ -146,10 +146,6 @@ namespace MultilanguageChat.ViewModels
                 IsRecording = false;
                 await ShowErrorAsync("Error while start recording", ex);
             }
-            finally
-            {
-                IsRecording = false;
-            }
 
             if (audioFile != null)
             {
@@ -182,7 +178,12 @@ namespace MultilanguageChat.ViewModels
                 finally
                 {
                     IsBusy = false;
+                    IsRecording = false;
                 }
+            }
+            else
+            {
+                IsRecording = false;
             }
         }
 
