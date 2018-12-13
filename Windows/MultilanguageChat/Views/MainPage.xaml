@@ -1,0 +1,132 @@
+﻿<Page
+    x:Class="MultilanguageChat.Views.MainPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="using:MultilanguageChat.Controls"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:models="using:MultilanguageChat.Models"
+    xmlns:vm="using:MultilanguageChat.ViewModels"
+    Style="{StaticResource PageStyle}"
+    mc:Ignorable="d">
+
+    <Page.DataContext>
+        <vm:MainViewModel />
+    </Page.DataContext>
+
+    <Page.Resources>
+        <DataTemplate x:Key="myMessageTemplate" x:DataType="models:ChatMessage">
+            <StackPanel HorizontalAlignment="Right" Orientation="Horizontal">
+                <TextBlock>
+                    <Run FontWeight="Bold" Text="{x:Bind Sender}" />
+                    <Run Text=": " />
+                    <Run Text="{x:Bind Text}" />
+                </TextBlock>
+            </StackPanel>
+        </DataTemplate>
+        <DataTemplate x:Key="otherMessageTemplate" x:DataType="models:ChatMessage">
+            <StackPanel Orientation="Horizontal">
+                <TextBlock>
+                    <Run FontWeight="Bold" Text="{x:Bind Sender}" />
+                    <Run Text=": " />
+                    <Run Text="{x:Bind Text}" />
+                </TextBlock>
+            </StackPanel>
+        </DataTemplate>
+        <controls:ChatMessageDataTemplateSelector
+            x:Key="chatMessageDataTemplateSelector"
+            MyMessage="{StaticResource myMessageTemplate}"
+            OtherMessage="{StaticResource otherMessageTemplate}" />
+    </Page.Resources>
+
+    <Grid x:Name="ContentArea" Margin="{StaticResource MediumLeftRightMargin}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="48" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <TextBlock
+            x:Uid="Main_Title"
+            Grid.Row="0"
+            Style="{StaticResource PageTitleStyle}" />
+
+        <Grid Grid.Row="1" Background="{ThemeResource SystemControlPageBackgroundChromeLowBrush}">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+
+            <TextBox
+                x:Uid="UserName"
+                Grid.Row="0"
+                Text="{x:Bind ViewModel.UserName, Mode=TwoWay}" />
+            <ComboBox
+                x:Uid="Languages"
+                Grid.Row="1"
+                HorizontalAlignment="Stretch"
+                DisplayMemberPath="Name"
+                ItemsSource="{x:Bind ViewModel.Languages, Mode=TwoWay}"
+                SelectedItem="{x:Bind ViewModel.SelectedLanguage, Mode=TwoWay}" />
+
+            <ListView
+                Grid.Row="2"
+                ItemTemplateSelector="{StaticResource chatMessageDataTemplateSelector}"
+                ItemsSource="{x:Bind ViewModel.Messages, Mode=OneWay}"
+                SelectionMode="None">
+                <ListView.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <ItemsStackPanel ItemsUpdatingScrollMode="KeepLastItemInView" />
+                    </ItemsPanelTemplate>
+                </ListView.ItemsPanel>
+                <ListView.ItemContainerStyle>
+                    <Style TargetType="ListViewItem">
+                        <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                    </Style>
+                </ListView.ItemContainerStyle>
+            </ListView>
+
+            <Grid Grid.Row="3" Margin="0,0,0,8">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <TextBox
+                    x:Uid="Message"
+                    Grid.Column="0"
+                    HorizontalAlignment="Stretch"
+                    Text="{x:Bind ViewModel.Message, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+
+                <StackPanel Grid.Column="1" Orientation="Horizontal">
+                    <Button Grid.Column="1" Command="{x:Bind ViewModel.SendMessageCommand}">
+                        <Button.Content>
+                            <SymbolIcon Symbol="Send" />
+                        </Button.Content>
+                    </Button>
+                    <Button
+                        Grid.Column="1"
+                        Command="{x:Bind ViewModel.StartRecordingCommand}"
+                        Visibility="{x:Bind ViewModel.IsRecording, Mode=OneWay, Converter={StaticResource BooleanNegationToVisibilityConverter}}">
+                        <Button.Content>
+                            <SymbolIcon Symbol="Microphone" />
+                        </Button.Content>
+                    </Button>
+                    <Button
+                        Grid.Column="1"
+                        Command="{x:Bind ViewModel.StopRecordingCommand}"
+                        Visibility="{x:Bind ViewModel.IsRecording, Mode=OneWay, Converter={StaticResource BooleanToVisibilityConverter}}">
+                        <Button.Content>
+                            <SymbolIcon Symbol="Stop" />
+                        </Button.Content>
+                    </Button>
+                </StackPanel>
+            </Grid>
+        </Grid>
+
+        <ProgressRing
+            Grid.Row="1"
+            IsActive="{x:Bind ViewModel.IsBusy, Mode=TwoWay}"
+            Visibility="Visible" />
+    </Grid>
+</Page>
