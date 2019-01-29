@@ -16,7 +16,7 @@ To use these applications, you must obtain the required Keys and Connection Stri
 
 **Configure the Web Backend**
 
-Go the [appsettings.json](https://github.com/marcominerva/MultilanguageChat/blob/master/Web/MultilanguageChat/appsettings.json) file and write the required information:
+Go to the [appsettings.json](https://github.com/marcominerva/MultilanguageChat/blob/master/Web/MultilanguageChat/appsettings.json) file and write the required information:
 
 - In the **Azure:SignalR:ConnectionString** property, specify the Connection String you can find in the **Keys** blade of the Azure SignalR Service
 
@@ -26,7 +26,7 @@ Go the [appsettings.json](https://github.com/marcominerva/MultilanguageChat/blob
 
 **Configure the UWP app**
 
-Go the the [Constants.cs](https://github.com/marcominerva/MultilanguageChat/blob/master/Windows/MultilanguageChat/Common/Constants.cs) file and write the required information:
+Go to the [Constants.cs](https://github.com/marcominerva/MultilanguageChat/blob/master/Windows/MultilanguageChat/Common/Constants.cs) file and write the required information:
 
 - In the **ServerUrl** field, specify the Url of the Web App on Azure with the */chat* suffix, for example:
     > https://myappsite.azurewebsites.net/chat
@@ -39,7 +39,7 @@ Go the the [Constants.cs](https://github.com/marcominerva/MultilanguageChat/blob
 
 **Configure the Xamarin app**
 
-Go the the [Constants.cs](https://github.com/marcominerva/MultilanguageChat/blob/master/App/MultilanguageChat/Common/Constants.cs) file and write the required information (the same as above).
+Go to the [Constants.cs](https://github.com/marcominerva/MultilanguageChat/blob/master/App/MultilanguageChat/Common/Constants.cs) file and write the required information (the same as above).
 
 **Contribute**
 
