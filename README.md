@@ -14,7 +14,7 @@ To use these applications, you must obtain the required Keys and Connection Stri
 
 - Create a new [Speech Service](https://portal.azure.com/#create/Microsoft.CognitiveServicesSpeechServices). For best perfomance, choose a Location near you
 
-**Configure the Web Backend**
+**Configure the Web App**
 
 Go to the [appsettings.json](https://github.com/marcominerva/MultilanguageChat/blob/master/Web/MultilanguageChat/appsettings.json) file and write the required information:
 
