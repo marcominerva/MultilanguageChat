@@ -27,7 +27,7 @@ namespace MultilanguageChat
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddSignalR(options => options.EnableDetailedErrors = true).AddAzureSignalR();
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
             services.Configure<AppSettings>(Configuration.GetSection("AppSettings"));
         }
