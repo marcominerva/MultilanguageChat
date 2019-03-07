@@ -11,6 +11,8 @@ using System.Text;
 using System.Threading.Tasks;
 using TranslatorService;
 using TranslatorService.Models;
+using TranslatorService.Models.Speech;
+using TranslatorService.Models.Translation;
 using Xamarin.Essentials;
 using Xamarin.Forms;
 
