@@ -38,32 +38,37 @@
             var messageCallback = function (message) {
                 if (!message) return;
 
-                var lang = getParameterByName('lang');
-                fetch('@Url.Action("Translate", "Translator")?text=' + htmlEncode(message.text) + "&src=" + message.language + "&dst=" + lang)
-                    .then(
-                        function (response) {
-                            if (response.status !== 200) {
-                                console.log('Looks like there was a problem. Status Code: ' + response.status);
-                                return;
-                            }
-
-                            // Examine the text in the response
-                            response.json().then(function (data) {
-                                console.log(data);
-
-                                // Html encode display name and message.
-                                appendMessage(message.sender, data.translatedText, false);
-
-                                var messageBox = $('discussion');
-                                messageBox.scrollTop = messageBox.scrollHeight;
-
-                            });
+                fetch('@Url.Action("Translate", "Translator")', {
+                    method: 'POST',
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ text: message.text, sourceLanguage: message.language, destinationLanguage: GetQueryStringParameter('lang') })
+                })
+                .then(
+                    function (response) {
+                        if (response.status !== 200) {
+                            console.log('Looks like there was a problem. Status Code: ' + response.status);
+                            return;
                         }
-                    )
-                    .catch(function (err) {
-                        alert(err);
-                        console.log('Fetch Error: ', err);
-                    });
+
+                        // Examine the text in the response
+                        response.json().then(function (data) {
+                            console.log(data);
+
+                            // Html encode display name and message.
+                            appendMessage(message.sender, data.translatedText, false);
+
+                            var messageBox = $('discussion');
+                            messageBox.scrollTop = messageBox.scrollHeight;
+                        });
+                    }
+                )
+                .catch(function (err) {
+                    alert(err);
+                    console.log('Fetch Error: ', err);
+                });
             };
 
             // Create a function that the hub can call to broadcast messages.
@@ -77,7 +82,7 @@
             $("#send").click(function (e) {
                 var sender = $("#name").val();
                 var message = $("#message").val();
-                var lang = getParameterByName('lang');
+                var lang = GetQueryStringParameter('lang');
 
                 if (message != '') {
                     connection.send('sendMessage', { sender: sender, text: message, language: lang });
@@ -113,16 +118,11 @@
             return encodedValue;
         }
 
-        function getParameterByName(name) {
-            name = name.replace(/[\[]/, "\\\[").replace(/[\]]/, "\\\]");
-            var regexS = "[\\?&]" + name + "=([^&#]*)";
-            var regex = new RegExp(regexS);
-            var results = regex.exec(window.location.href);
+        function GetQueryStringParameter(name) {
+            const urlParams = new URLSearchParams(window.location.search);
+            const param = urlParams.get(name);
 
-            if (results == null)
-                return "";
-            else
-                return decodeURIComponent(results[1].replace(/\+/g, " "));
+            return param;
         }
 
         var connection = new signalR.HubConnectionBuilder()

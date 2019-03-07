@@ -21,30 +21,30 @@ namespace MultilanguageChat.Controllers
             this.settings = settings.Value;
         }
 
-        [HttpGet]
-        public async Task<ActionResult<TranslationMessage>> Translate(string text, [FromQuery(Name = "src")] string sourceLanguage, [FromQuery(Name = "dst")] string destinationLanguage)
+        [HttpPost]
+        public async Task<ActionResult<TranslationMessage>> Translate(TranslationMessage message)
         {
             string translatedText = null;
 
-            if (!string.IsNullOrWhiteSpace(destinationLanguage) && sourceLanguage != destinationLanguage)
+            if (!string.IsNullOrWhiteSpace(message.DestinationLanguage) &&  message.SourceLanguage != message.DestinationLanguage)
             {
                 // Translates the text.
                 var translatorService = new TranslatorClient(settings.TranslatorSubscriptionKey);
-                var response = await translatorService.TranslateAsync(text, sourceLanguage, destinationLanguage);
+                var response = await translatorService.TranslateAsync(message.Text, message.SourceLanguage, message.DestinationLanguage);
                 translatedText = response.Translation.Text;
             }
             else
             {
                 // No destination language specified, use the original text.
-                translatedText = text;
+                translatedText = message.Text;
             }
 
             var translationMessage = new TranslationMessage
             {
-                Text = text,
-                SourceLanguage = sourceLanguage,
+                Text = message.Text,
+                SourceLanguage = message.SourceLanguage,
                 TranslatedText = translatedText,
-                DestinationLanguage = destinationLanguage
+                DestinationLanguage = message.DestinationLanguage
             };
 
             return translationMessage;
