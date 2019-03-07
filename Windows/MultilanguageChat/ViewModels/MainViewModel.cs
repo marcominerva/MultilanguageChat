@@ -11,6 +11,8 @@ using MultilanguageChat.Models;
 using MultilanguageChat.Services;
 using TranslatorService;
 using TranslatorService.Models;
+using TranslatorService.Models.Speech;
+using TranslatorService.Models.Translation;
 using Windows.ApplicationModel.Core;
 using Windows.UI.Core;
 using Windows.UI.Xaml.Navigation;
