@@ -1,6 +1,6 @@
 # Multilanguage Chat
 
-This sample shows how to use Azure SignalR, Microsoft Translator and Speech Services to build a real-time voice translation system for ASP.NET Core, Windows 10 and Xamarin.
+This project shows how to use Azure SignalR, Microsoft Translator and Speech Services to build a real-time voice translation system for ASP.NET Core, Windows 10 and Xamarin.
 
 **Getting started**
 
