@@ -1,10 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Options;
 using MultilanguageChat.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using TranslatorService;
 
@@ -14,11 +9,11 @@ namespace MultilanguageChat.Controllers
     [ApiController]
     public class TranslatorController : ControllerBase
     {
-        private readonly AppSettings settings;
+        private readonly ITranslatorClient translatorClient;
 
-        public TranslatorController(IOptions<AppSettings> settings)
+        public TranslatorController(ITranslatorClient translatorClient)
         {
-            this.settings = settings.Value;
+            this.translatorClient = translatorClient;
         }
 
         [HttpPost]
@@ -26,11 +21,10 @@ namespace MultilanguageChat.Controllers
         {
             string translatedText = null;
 
-            if (!string.IsNullOrWhiteSpace(message.DestinationLanguage) &&  message.SourceLanguage != message.DestinationLanguage)
+            if (!string.IsNullOrWhiteSpace(message.DestinationLanguage) && message.SourceLanguage != message.DestinationLanguage)
             {
                 // Translates the text.
-                var translatorService = new TranslatorClient(settings.TranslatorSubscriptionKey);
-                var response = await translatorService.TranslateAsync(message.Text, message.SourceLanguage, message.DestinationLanguage);
+                var response = await translatorClient.TranslateAsync(message.Text, message.SourceLanguage, message.DestinationLanguage);
                 translatedText = response.Translation.Text;
             }
             else

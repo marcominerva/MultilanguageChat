@@ -1,16 +1,11 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using MultilanguageChat.Hubs;
 using MultilanguageChat.Models;
+using TranslatorService;
 
 namespace MultilanguageChat
 {
@@ -29,7 +24,8 @@ namespace MultilanguageChat
             services.AddSignalR(options => options.EnableDetailedErrors = true).AddAzureSignalR();
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
-            services.Configure<AppSettings>(Configuration.GetSection("AppSettings"));
+            var appSettings = Configuration.GetSection(nameof(AppSettings)).Get<AppSettings>();
+            services.AddSingleton<ITranslatorClient>(_ => new TranslatorClient(appSettings.TranslatorSubscriptionKey));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
